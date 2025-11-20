@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fami – Bevara din familjs historia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta
+    name="description"
+    content="Fami är en plattform där familjer kan spara släktträd, röster, bilder och berättelser – tryggt, privat och enkelt."
+  />
+  <!-- Typsnitt Inter (samma som waitlist) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #166534;        /* Din gröna färg */
+      --primary-hover: #14532d;
+      --primary-soft: #dcfce7;
+      --accent: #4ade80;         /* Ljusare grön för detaljer */
+      --bg: #f5f5f5;
+      --text: #020617;
+      --muted: #4b5563;
+      --border: #d1d5db;
+      --radius: 14px;
+      --shadow-soft: 0 18px 60px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at top, #e4f3eb 0, #f9fafb 38%, #f3f4f6 100%);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* HEADER */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 16px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* NY LOGOTYP-STIL (Textbaserad) */
+    .logo {
+      font-family: "Inter", sans-serif;
+      font-weight: 800;       /* Extra tjock för logotyp-känsla */
+      font-size: 1.6rem;
+      letter-spacing: -0.04em; /* Tajtare bokstäver ser mer "designat" ut */
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    
+    /* En liten punkt efter namnet för design-touch (valfritt) */
+    .logo::after {
+      content: ".";
+      color: var(--accent);
+      margin-left: 2px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: #4b5563;
+    }
+
+    .nav-link {
+      position: relative;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: var(--primary);
+    }
+
+    /* Language Toggle */
+    .language-toggle {
+      display: inline-flex;
+      padding: 3px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(0,0,0,0.05);
+      margin-left: 4px;
+    }
+
+    .lang-btn {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .lang-btn:hover {
+      color: var(--text);
+    }
+
+    .lang-btn--active {
+      background: #fff;
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    /* HERO */
+    .hero {
+      padding: 90px 16px 110px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 40px;
+      align-items: center;
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 5vw, 3.4rem);
+      line-height: 1.1;
+      color: #020617;
+      margin-bottom: 20px;
+      letter-spacing: -0.03em;
+      font-weight: 800;
+    }
+
+    .hero-title span {
+      color: var(--primary);
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: #4b5563;
+      max-width: 520px;
+      margin-bottom: 36px;
+      line-height: 1.65;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 32px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      color: #fff;
+      font-weight: 600;
+      font-size: 1.05rem;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(22, 101, 52, 0.3);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 45px rgba(22, 101, 52, 0.4);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      border: 1px solid #cbd5e1;
+      padding: 14px 28px;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #334155;
+      background: #fff;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .btn-secondary:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+
+    .hero-meta {
+      font-size: 0.85rem;
+      color: #6b7280;
+      background: rgba(255,255,255,0.6);
+      padding: 12px 16px;
+      border-radius: 12px;
+      display: inline-block;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .hero-meta strong {
+      color: #166534;
+    }
+
+    /* SECTIONS */
+    .section {
+      padding: 80px 16px;
+    }
+
+    .section-header {
+      text-align: left;
+      max-width: 680px;
+      margin-bottom: 40px;
+    }
+
+    .section-kicker {
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-size: 2.2rem;
+      margin-bottom: 16px;
+      color: #020617;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .section-sub {
+      font-size: 1.1rem;
+      color: #4b5563;
+      line-height: 1.7;
+    }
+
+    /* QUOTE BLOCK */
+    .quote-block {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      margin: 60px 0;
+      background: #fff;
+      padding: 32px;
+      border-radius: 24px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    }
+
+    .quote-img {
+      width: 45%;
+      border-radius: 16px;
+      object-fit: cover;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .quote-text {
+      font-size: 1.35rem;
+      font-weight: 500;
+      line-height: 1.5;
+      color: #022c22;
+      font-style: italic;
+    }
+
+    /* CARDS */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 28px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.08);
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--primary-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 18px;
+    }
+
+    .card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      color: #0f172a;
+      font-weight: 700;
+    }
+
+    .card p {
+      font-size: 1rem;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    /* HOW IT WORKS */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
+      margin-top: 32px;
+    }
+
+    .step {
+      padding: 28px;
+      border-radius: 20px;
+      background: #0f172a;
+      color: #f8fafc;
+      border: 1px solid #1e293b;
+    }
+
+    .step-number {
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #4ade80;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .step-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .step p {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+
+    /* CTA BAND */
+    .cta-band {
+      padding: 100px 16px;
+      background: #020617;
+      color: #f1f5f9;
+      margin-top: 40px;
+    }
+
+    .cta-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .cta-title {
+      font-size: 2.2rem;
+      margin-bottom: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .cta-text {
+      font-size: 1.1rem;
+      color: #94a3b8;
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .cta-box {
+      background: radial-gradient(circle at top left, #16a34a, #14532d);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 20px 50px rgba(22, 163, 74, 0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .cta-box span {
+      font-size: 0.95rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: #f0fdf4;
+    }
+    
+    .cta-box span::before {
+      content: "✓";
+      color: #bbf7d0;
+      font-weight: bold;
+    }
+
+    .cta-badge {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #bbf7d0;
+      background: rgba(255,255,255,0.15);
+      padding: 6px 12px;
+      border-radius: 999px;
+      align-self: flex-start;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+    
+    .cta-box .cta-badge::before {
+        content: none;
+    }
+
+    .cta-btn {
+      margin-top: 16px;
+      align-self: flex-start;
+      padding: 14px 30px;
+      border-radius: 999px;
+      border: none;
+      background: #fff;
+      color: #14532d;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .cta-btn:hover {
+      opacity: 0.95;
+      transform: translateY(-2px);
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid #e5e7eb;
+      padding: 60px 16px;
+      font-size: 0.9rem;
+      color: #6b7280;
+      background: #f9fafb;
+      text-align: center;
+    }
+
+    .footer-text {
+      max-width: 600px;
+      margin: 0 auto 16px;
+    }
+
+    .footer-contact a {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 880px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      
+      .hero-actions {
+        justify-content: center;
+      }
+      
+      .hero-meta {
+        margin-top: 10px;
+      }
+
+      .quote-block {
+        flex-direction: column;
+        text-align: center;
+        padding: 24px;
+      }
+      
+      .quote-img {
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .cards, .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-inner {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-title {
+        font-size: 2.4rem;
+      }
+      
+      .nav-link {
+        display: none;
+      }
+      
+      .language-toggle {
+        margin-left: auto; 
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- HEADER -->
+    <header>
+      <div class="header-inner">
+        <!-- NY LOGOTYP: Bara text, snyggt typsnitt -->
+        <a href="#" class="logo">Fami</a>
+       
+        <nav>
+          <a class="nav-link" href="#why" data-i18n="navWhy">Varför Fami</a>
+          <a class="nav-link" href="#how" data-i18n="navHow">Hur det funkar</a>
+          <!-- Ingen "Gå med" knapp här uppe längre -->
+          
+          <!-- SPRÅK KNAPPAR -->
+          <div class="language-toggle" aria-label="Byt språk">
+            <button type="button" class="lang-btn lang-btn--active" data-lang="sv">SV</button>
+            <button type="button" class="lang-btn" data-lang="en">EN</button>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <h1 class="hero-title" data-i18n="heroTitle">
+              Bevara din familjs historia<br />
+              <span>på riktigt</span>
+            </h1>
+
+            <p class="hero-sub" data-i18n="heroSub">
+              Fami samlar släktträd, röster, bilder och berättelser i ett tryggt, privat
+              arkiv. Det som dina föräldrar delar idag kan dina barn och barnbarn ta del
+              av i framtiden – oavsett var i världen ni bor.
+            </p>
+
+            <!-- Enda stället där knappen finns i övre delen nu -->
+            <div class="hero-actions">
+              <a href="waitlist.html" class="btn-primary" data-i18n="btnWaitlist">Gå med på väntelistan</a>
+              <a href="#why" class="btn-secondary" data-i18n="btnReadMore">
+                Läs mer om varför
+              </a>
+            </div>
+
+            <p class="hero-meta">
+              <span data-i18n="heroMeta">
+                <strong>Founding Families:</strong> de första 100 familjerna får tidig
+                tillgång och möjlighet att påverka hur Fami formas.
+              </span>
+            </p>
+          </div>
+          <!-- Här kan du lägga in en hero-bild senare om du vill -->
+        </div>
+      </section>
+
+      <!-- VARFÖR FAMI -->
+      <section class="section" id="why">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-kicker" data-i18n="whyKicker">Varför Fami behövs</div>
+            <h2 class="section-title" data-i18n="whyTitle">Det som inte sparas, försvinner</h2>
+            <p class="section-sub" data-i18n="whySub">
+              När äldre går bort försvinner ofta språk, historier och erfarenheter.
+              Samtidigt ligger bilder utspridda i mobiler, chattappar och hårddiskar.
+              Fami är ett försök att ge allt detta ett hem.
+            </p>
+          </div>
+
+          <!-- QUOTE BLOCK -->
+          <div class="quote-block">
+            <!-- Placeholder bild, se till att family-quote.png finns i mappen -->
+            <img src="family-quote.png" alt="Familj tittar på fotoalbum" class="quote-img" onerror="this.style.display='none'" />
+            <blockquote class="quote-text" data-i18n="quoteText">
+              ”Varje familj bär på berättelser värda att bevara.
+              Vi gör det möjligt att samla dem – tryggt, privat och enkelt.”
+            </blockquote>
+          </div>
+
+          <div class="cards">
+            <article class="card">
+              <div class="card-icon">🧬</div>
+              <h3 data-i18n="card1Title">Släktträd som lever</h3>
+              <p data-i18n="card1Text">
+                Bygg släktträdet tillsammans. Lägg till relationer, årtal och små notiser.
+                Koppla minnen till rätt person så att nya generationer förstår hur alla hänger ihop.
+              </p>
+            </article>
+
+            <article class="card">
+              <div class="card-icon">🎤</div>
+              <h3 data-i18n="card2Title">Röster, språk & berättelser</h3>
+              <p data-i18n="card2Text">
+                Spela in röster, sånger, ord på olika språk och viktiga livsberättelser.
+                Saker som annars bara finns “i huvudet” får en trygg plats att bo på.
+              </p>
+            </article>
+
+            <article class="card">
+              <div class="card-icon">🌍</div>
+              <h3 data-i18n="card3Title">För diasporafamiljer</h3>
+              <p data-i18n="card3Text">
+                Många familjer är utspridda över flera länder. Fami är designat med diaspora i fokus –
+                med stöd för flera språk och olika generationers sätt att använda teknik.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- HUR DET FUNKAR -->
+      <section class="section" id="how">
+        <div class="container">
+          <div class="section-header">
+            <div class="section-kicker" data-i18n="howKicker">Hur Fami kan fungera</div>
+            <h2 class="section-title" data-i18n="howTitle">Tänk dig ett digitalt vardagsrum</h2>
+            <p class="section-sub" data-i18n="howSub">
+              Fami är fortfarande under utveckling. Visionen är enkel: en trygg, lugn plats där släkten
+              kan bidra med minnen utan att det känns som ännu ett socialt medie-konto.
+            </p>
+          </div>
+
+          <div class="steps">
+            <div class="step">
+              <div class="step-number" data-i18n="step1Num">Steg 1</div>
+              <div class="step-title" data-i18n="step1Title">Bjud in familjen</div>
+              <p data-i18n="step1Text">
+                Skapa ett familje-arkiv, bjud in släktingar i olika länder och låt alla bidra
+                med det de orkar – en bild här, en röstinspelning där.
+              </p>
+            </div>
+            <div class="step">
+              <div class="step-number" data-i18n="step2Num">Steg 2</div>
+              <div class="step-title" data-i18n="step2Title">Bygg upp släktträdet</div>
+              <p data-i18n="step2Text">
+                Lägg till personer, relationer och viktiga årtal. Koppla minnen direkt till
+                rätt person eller gren i trädet.
+              </p>
+            </div>
+            <div class="step">
+              <div class="step-number" data-i18n="step3Num">Steg 3</div>
+              <div class="step-title" data-i18n="step3Title">Bevara för framtiden</div>
+              <p data-i18n="step3Text">
+                Allt sparas på ett ställe. Nya generationer kan upptäcka sin historia – inte bara
+                genom text, utan genom röster, bilder och berättelser.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA BAND -->
+      <section class="cta-band">
+        <div class="cta-inner">
+          <div>
+            <h2 class="cta-title" data-i18n="ctaTitle">Vill du vara med och forma Fami?</h2>
+            <p class="cta-text" data-i18n="ctaText">
+              Jag bygger Fami steg för steg. Genom att gå med på väntelistan blir du en del
+              av resan från början – särskilt om du själv har familj utspridd i flera länder,
+              eller önskar att fler av dina äldres berättelser hade sparats.
+            </p>
+          </div>
+          <div class="cta-box">
+            <span class="cta-badge">Founding Families</span>
+            <span data-i18n="benefit1">Tidig tillgång till prototyper och betaversioner</span>
+            <span data-i18n="benefit2">Möjlighet att ge feedback och påverka</span>
+            <span data-i18n="benefit3">Inbjudan till digitala samtal om familjehistoria</span>
+            <button class="cta-btn" onclick="location.href='waitlist.html'" data-i18n="btnWaitlist">
+              Gå med på väntelistan
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <p class="footer-text" data-i18n="footerText">
+        Fami är just nu i utvecklingsfas. Jag bygger det här steg för steg och delar resan öppet.
+      </p>
+
+      <p class="footer-contact">
+        <span data-i18n="footerContact">Kontakt:</span> <a href="mailto:joinfami@gmail.com">joinfami@gmail.com</a>
+      </p>
+
+      <p style="margin-top: 20px; font-size: 0.8rem; opacity: 0.7;">
+        © Fami Archive
+      </p>
+    </footer>
+  </div>
+
+  <!-- JS FÖR SPRÅKHANTERING -->
+  <script>
+    const translations = {
+      sv: {
+        navWhy: "Varför Fami",
+        navHow: "Hur det funkar",
+        heroTitle: "Bevara din familjs historia<br /><span>på riktigt</span>",
+        heroSub: "Fami samlar släktträd, röster, bilder och berättelser i ett tryggt, privat arkiv. Det som dina föräldrar delar idag kan dina barn och barnbarn ta del av i framtiden.",
+        btnWaitlist: "Gå med på väntelistan",
+        btnReadMore: "Läs mer om varför",
+        heroMeta: "<strong>Founding Families:</strong> de första 100 familjerna får tidig tillgång och möjlighet att påverka hur Fami formas.",
+        whyKicker: "Varför Fami behövs",
+        whyTitle: "Det som inte sparas, försvinner",
+        whySub: "När äldre går bort försvinner ofta språk, historier och erfarenheter. Samtidigt ligger bilder utspridda i mobiler och chattappar. Fami är ett försök att ge allt detta ett hem.",
+        quoteText: "”Varje familj bär på berättelser värda att bevara. Vi gör det möjligt att samla dem – tryggt, privat och enkelt.”",
+        card1Title: "Släktträd som lever",
+        card1Text: "Bygg släktträdet tillsammans. Koppla minnen till rätt person så att nya generationer förstår hur alla hänger ihop.",
+        card2Title: "Röster, språk & berättelser",
+        card2Text: "Spela in röster, sånger och livsberättelser. Saker som annars bara finns “i huvudet” får en trygg plats att bo på.",
+        card3Title: "För diasporafamiljer",
+        card3Text: "Fami är designat med diaspora i fokus – med stöd för flera språk och olika generationers sätt att använda teknik.",
+        howKicker: "Hur Fami kan fungera",
+        howTitle: "Tänk dig ett digitalt vardagsrum",
+        howSub: "En trygg, lugn plats där släkten kan bidra med minnen utan att det känns som ännu ett socialt medie-konto.",
+        step1Num: "STEG 1",
+        step1Title: "Bjud in familjen",
+        step1Text: "Skapa ett familje-arkiv, bjud in släktingar i olika länder och låt alla bidra med det de orkar.",
+        step2Num: "STEG 2",
+        step2Title: "Bygg upp släktträdet",
+        step2Text: "Lägg till personer, relationer och viktiga årtal. Koppla minnen direkt till rätt person eller gren i trädet.",
+        step3Num: "STEG 3",
+        step3Title: "Bevara för framtiden",
+        step3Text: "Allt sparas på ett ställe. Nya generationer kan upptäcka sin historia genom röster, bilder och berättelser.",
+        ctaTitle: "Vill du vara med och forma Fami?",
+        ctaText: "Jag bygger Fami steg för steg. Bli en del av resan från början – särskilt om du själv har familj utspridd i flera länder.",
+        benefit1: "Tidig tillgång till prototyper och betaversioner",
+        benefit2: "Möjlighet att ge feedback och påverka",
+        benefit3: "Inbjudan till digitala samtal om familjehistoria",
+        footerText: "Fami är just nu i utvecklingsfas. Jag bygger det här steg för steg och delar resan öppet.",
+        footerContact: "Kontakt:"
+      },
+      en: {
+        navWhy: "Why Fami",
+        navHow: "How it works",
+        heroTitle: "Preserve your family history<br /><span>for real</span>",
+        heroSub: "Fami collects family trees, voices, photos, and stories in a safe, private archive. What your parents share today, your grandchildren can experience in the future.",
+        btnWaitlist: "Join the waitlist",
+        btnReadMore: "Read more",
+        heroMeta: "<strong>Founding Families:</strong> The first 100 families get early access and the chance to shape how Fami is built.",
+        whyKicker: "Why Fami is needed",
+        wh
