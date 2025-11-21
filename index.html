@@ -8,15 +8,15 @@
     name="description"
     content="Fami är en plattform där familjer kan spara släktträd, röster, bilder och berättelser – tryggt, privat och enkelt."
   />
-  <!-- Typsnitt Inter (samma som waitlist) -->
+  <!-- Typsnitt Inter -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --primary: #166534;        /* Din gröna färg */
+      --primary: #166534;
       --primary-hover: #14532d;
       --primary-soft: #dcfce7;
-      --accent: #4ade80;         /* Ljusare grön för detaljer */
+      --accent: #4ade80;
       --bg: #f5f5f5;
       --text: #020617;
       --muted: #4b5563;
@@ -64,8 +64,8 @@
     header {
       position: sticky;
       top: 0;
-      z-index: 20;
-      background: rgba(255, 255, 255, 0.85);
+      z-index: 9000; /* Mycket högt värde */
+      background: rgba(255, 255, 255, 0.95); /* Mer solid bakgrund */
       backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(0,0,0,0.04);
     }
@@ -77,21 +77,21 @@
       padding: 16px 16px;
       max-width: 1100px;
       margin: 0 auto;
+      position: relative;
+      z-index: 9001;
     }
 
-    /* NY LOGOTYP-STIL (Textbaserad) */
     .logo {
       font-family: "Inter", sans-serif;
-      font-weight: 800;       /* Extra tjock för logotyp-känsla */
+      font-weight: 800;
       font-size: 1.6rem;
-      letter-spacing: -0.04em; /* Tajtare bokstäver ser mer "designat" ut */
+      letter-spacing: -0.04em;
       color: var(--primary);
       display: flex;
       align-items: center;
       text-decoration: none;
     }
     
-    /* En liten punkt efter namnet för design-touch (valfritt) */
     .logo::after {
       content: ".";
       color: var(--accent);
@@ -105,6 +105,8 @@
       font-size: 0.92rem;
       font-weight: 500;
       color: #4b5563;
+      position: relative;
+      z-index: 9002;
     }
 
     .nav-link {
@@ -117,7 +119,7 @@
       color: var(--primary);
     }
 
-    /* Language Toggle */
+    /* Language Toggle - EXTREM SÄKERHET */
     .language-toggle {
       display: inline-flex;
       padding: 3px;
@@ -125,6 +127,8 @@
       background: rgba(0, 0, 0, 0.06);
       border: 1px solid rgba(0,0,0,0.05);
       margin-left: 4px;
+      position: relative; 
+      z-index: 9999; /* Absolut överst */
     }
 
     .lang-btn {
@@ -132,26 +136,34 @@
       background: transparent;
       color: var(--muted);
       font-size: 0.75rem;
-      font-weight: 600;
-      padding: 4px 10px;
+      font-weight: 700; /* Lite fetare text så man ser den */
+      padding: 6px 14px; /* Större klickyta */
       border-radius: 999px;
       cursor: pointer;
       transition: all 0.2s ease;
+      position: relative;
+      z-index: 10000; /* Över behållaren */
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .lang-btn:hover {
       color: var(--text);
+      background: rgba(255,255,255,0.5);
     }
 
     .lang-btn--active {
-      background: #fff;
-      color: var(--primary);
+      background: #fff !important;
+      color: var(--primary) !important;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      cursor: default;
     }
 
     /* HERO */
     .hero {
       padding: 90px 16px 110px;
+      position: relative;
+      z-index: 1; /* Lågt värde så den inte täcker menyn */
     }
 
     .hero-grid {
@@ -559,18 +571,17 @@
     <!-- HEADER -->
     <header>
       <div class="header-inner">
-        <!-- NY LOGOTYP: Bara text, snyggt typsnitt -->
+        <!-- LOGOTYP -->
         <a href="#" class="logo">Fami</a>
        
         <nav>
           <a class="nav-link" href="#why" data-i18n="navWhy">Varför Fami</a>
           <a class="nav-link" href="#how" data-i18n="navHow">Hur det funkar</a>
-          <!-- Ingen "Gå med" knapp här uppe längre -->
           
-          <!-- SPRÅK KNAPPAR -->
+          <!-- SPRÅK KNAPPAR - MED DIREKT ONCLICK FÖR SÄKERHET -->
           <div class="language-toggle" aria-label="Byt språk">
-            <button type="button" class="lang-btn lang-btn--active" data-lang="sv">SV</button>
-            <button type="button" class="lang-btn" data-lang="en">EN</button>
+            <button type="button" class="lang-btn lang-btn--active" id="btn-sv" onclick="changeLanguage('sv')">SV</button>
+            <button type="button" class="lang-btn" id="btn-en" onclick="changeLanguage('en')">EN</button>
           </div>
         </nav>
       </div>
@@ -592,7 +603,6 @@
               av i framtiden – oavsett var i världen ni bor.
             </p>
 
-            <!-- Enda stället där knappen finns i övre delen nu -->
             <div class="hero-actions">
               <a href="waitlist.html" class="btn-primary" data-i18n="btnWaitlist">Gå med på väntelistan</a>
               <a href="#why" class="btn-secondary" data-i18n="btnReadMore">
@@ -607,7 +617,6 @@
               </span>
             </p>
           </div>
-          <!-- Här kan du lägga in en hero-bild senare om du vill -->
         </div>
       </section>
 
@@ -626,7 +635,7 @@
 
           <!-- QUOTE BLOCK -->
           <div class="quote-block">
-            <!-- Placeholder bild, se till att family-quote.png finns i mappen -->
+            <!-- Placeholder bild -->
             <img src="family-quote.png" alt="Familj tittar på fotoalbum" class="quote-img" onerror="this.style.display='none'" />
             <blockquote class="quote-text" data-i18n="quoteText">
               ”Varje familj bär på berättelser värda att bevara.
@@ -746,7 +755,7 @@
     </footer>
   </div>
 
-  <!-- JS FÖR SPRÅKHANTERING -->
+  <!-- GLOBAL JS UTANFÖR DOMCONTENTLOADED -->
   <script>
     const translations = {
       sv: {
@@ -796,4 +805,56 @@
         btnReadMore: "Read more",
         heroMeta: "<strong>Founding Families:</strong> The first 100 families get early access and the chance to shape how Fami is built.",
         whyKicker: "Why Fami is needed",
-        wh
+        whyTitle: "What isn't saved, disappears",
+        whySub: "When elders pass away, languages, stories, and experiences often vanish. Meanwhile, photos are scattered across phones and chat apps. Fami gives all of this a home.",
+        quoteText: "“Every family carries stories worth preserving. We make it possible to collect them – safely, privately, and simply.”",
+        card1Title: "Living Family Trees",
+        card1Text: "Build the tree together. Connect memories to the right person so new generations understand how everyone is connected.",
+        card2Title: "Voices, Languages & Stories",
+        card2Text: "Record voices, songs, and life stories. Things that otherwise only exist “in our heads” get a safe place to live.",
+        card3Title: "For Diaspora Families",
+        card3Text: "Fami is designed with diaspora in focus – supporting multiple languages and how different generations use technology.",
+        howKicker: "How Fami works",
+        howTitle: "Imagine a digital living room",
+        howSub: "A safe, calm place where relatives can contribute memories without it feeling like just another social media account.",
+        step1Num: "STEP 1",
+        step1Title: "Invite the family",
+        step1Text: "Create a family archive, invite relatives in different countries, and let everyone contribute what they can.",
+        step2Num: "STEP 2",
+        step2Title: "Build the tree",
+        step2Text: "Add people, relationships, and important dates. Link memories directly to the right person or branch.",
+        step3Num: "STEP 3",
+        step3Title: "Preserve for the future",
+        step3Text: "Everything is saved in one place. New generations can discover their history through voices, photos, and stories.",
+        ctaTitle: "Want to help shape Fami?",
+        ctaText: "I'm building Fami step by step. Join the journey from the start – especially if your family is spread across multiple countries.",
+        benefit1: "Early access to prototypes and beta versions",
+        benefit2: "Opportunity to give feedback and influence",
+        benefit3: "Invitations to online talks about family history",
+        footerText: "Fami is currently in development. I am building this step by step and sharing the journey openly.",
+        footerContact: "Contact:"
+      }
+    };
+
+    function changeLanguage(lang) {
+      const dict = translations[lang] || translations.sv;
+      document.documentElement.lang = lang === "en" ? "en" : "sv";
+
+      // Uppdatera texter
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) {
+          el.innerHTML = dict[key];
+        }
+      });
+
+      // Uppdatera knapparnas utseende
+      document.getElementById('btn-sv').className = lang === 'sv' ? 'lang-btn lang-btn--active' : 'lang-btn';
+      document.getElementById('btn-en').className = lang === 'en' ? 'lang-btn lang-btn--active' : 'lang-btn';
+    }
+
+    // Kör direkt
+    changeLanguage('sv');
+  </script>
+</body>
+</html>
